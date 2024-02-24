@@ -5,12 +5,13 @@ lines_read = 0
 total_lines_in_file = 0
 chunk_size = 2000
 
+
 async def process_line(line):
     global lines_read
     lines_read += 1
     words_count = len(line.split())
-    await asyncio.sleep(random.randint(0,5))
-    print(f"Words in line: {words_count}")
+    await asyncio.sleep(random.randint(0, 5))
+    print(f"line : {line}Words in line: {words_count}\n")
 
 
 async def process_chunk(chunk):
