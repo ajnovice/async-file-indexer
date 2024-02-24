@@ -9,7 +9,12 @@ chunk_size = 2000
 async def process_chunk(chunk):
     global lines_read
     lines_read += len(chunk)
-    await asyncio.sleep(random.randint(0,5))
+    await asyncio.sleep(random.randint(0, 5))
+
+def read_and_process_chunk(chunk):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(process_chunk(chunk))
 
 
 async def read_and_process_file(filename):
@@ -21,7 +26,7 @@ async def read_and_process_file(filename):
             chunk = [file.readline() for _ in range(chunk_size)]
             if not any(chunk):
                 break
-            await process_chunk(chunk)
+            await asyncio.get_event_loop().run_in_executor(None, read_and_process_chunk, chunk)
 
 
 async def progress_report():
@@ -39,6 +44,6 @@ async def main(filename):
     await asyncio.gather(*tasks)
 
 
-# Usage example
-filename = "file.txt"
-asyncio.run(main(filename))
+if __name__ == "__main__":
+    filename = "file.txt"
+    asyncio.run(main(filename))
